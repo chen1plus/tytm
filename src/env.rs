@@ -39,6 +39,10 @@ pub fn init() {
     assert!(TYTM.is_dir());
 }
 
+pub fn manifest_path() -> PathBuf {
+    TYTM.join("manifest.json")
+}
+
 /// Ensure that a directory exists, failed if missing parent directories.
 #[deprecated]
 fn ensure_dir<P: AsRef<Path>>(path: P) -> io::Result<()> {

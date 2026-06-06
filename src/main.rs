@@ -3,6 +3,7 @@ use clap::{Parser, Subcommand};
 mod cmds;
 mod env;
 mod fsx;
+mod manifest;
 
 #[derive(Parser)]
 #[command(
@@ -70,11 +71,11 @@ fn main() -> anyhow::Result<()> {
         }
 
         Commands::Remove { theme, sub } => {
-            todo!()
+            cmds::remove::entry(theme, sub)?;
         }
 
         Commands::List => {
-            todo!()
+            cmds::list::entry()?;
         }
     }
 
