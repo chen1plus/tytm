@@ -2,35 +2,68 @@
 
 A theme package manager for Typora.
 
-Current features:
-- [x] add a theme
-- [ ] remove a theme
-- [ ] list installed themes
+## Current Features
+
+- [x] Add a theme
+- [x] Remove a theme
+- [x] List installed themes
+- [ ] Update manifest
 
 ## Installation
 
-> [!Warning]
->
-> Only use the pre-built binary if you trust me; otherwise, consider building it from source.
+### macOS
+
+Install via Homebrew:
+
+```sh
+brew tap chen1plus/tap
+brew install chen1plus/tap/tytm
+```
 
 ### Windows
 
-Download the `tytm.exe` from the release page.
+Download `tytm.exe` from the release page.
 
-### Mac OS
+### Build from Source
 
-1. Download the `tytm` from the release page.
-2. Remove the file attribute to bypass your Mac's restriction and grant execute permission.
+You can build and install it using Cargo:
 
 ```sh
-xattr -dr com.apple.quarantine ./tytm
-chmod +x ./tytm
+cargo install --path .
 ```
 
 ## Usage
 
+### List Installed Themes
+
 ```sh
-./tytm add <URL>
+tytm list
+# alias: tytm ls
 ```
 
-which the url points to the git/zip file of the theme.
+### Add a Theme
+
+```sh
+tytm add <URL>
+```
+
+The URL should point to a git repository or a zip file of the theme.
+
+You can optionally specify the URL type (`git` or `zip`):
+
+```sh
+tytm add <URL> -u <git|zip>
+```
+
+### Remove a Theme
+
+```sh
+tytm remove <THEME>
+# alias: tytm rm <THEME>
+```
+
+To remove specific sub-packages of a theme:
+
+```sh
+tytm remove <THEME> -s <SUB>
+```
