@@ -6,6 +6,8 @@ use tempfile::{tempdir, tempfile};
 use zip::ZipArchive;
 
 use crate::{env, fsx};
+use crate::manifest::{Manifest, ThemeEntry};
+use colored::Colorize;
 
 #[derive(Clone, Copy, ValueEnum)]
 pub enum UrlType {
@@ -18,36 +20,76 @@ pub fn entry(url: &str, url_type: UrlType) -> anyhow::Result<()> {
 
     match url_type {
         UrlType::Git => {
-            println!("Cloning ...");
+            println!("{}", "Cloning theme repository...".cyan());
             git2::Repository::clone(url, &tmp_dir)?;
         }
 
         UrlType::Zip => {
             let mut tmp_file = tempfile()?;
 
-            println!("Downloading ...");
+            println!("{}", "Downloading theme zip...".cyan());
             reqwest::blocking::get(url)?.copy_to(&mut tmp_file)?;
 
-            println!("Extracting...");
+            println!("{}", "Extracting zip archive...".cyan());
             ZipArchive::new(tmp_file)?.extract(&tmp_dir)?;
         }
     }
 
     let base = find_base_dir(tmp_dir.path())?;
+    let mut copied_files = Vec::new();
+
     for entry in fs::read_dir(&base)? {
         let path = entry?.path();
+        let file_name = path.file_name().unwrap().to_str().unwrap().to_string();
 
         // this unwrap is safe because we know the path exists
-        if path.file_name().unwrap().to_str() == Some(".git") {
+        if file_name == ".git" {
             continue;
         }
 
         if path.is_dir() || path.extension() == Some("css".as_ref()) {
             fsx::Obj::from(path).move_to(env::TYPORA_THEME.as_path())?;
+            copied_files.push(file_name);
         }
     }
 
-    println!("Done");
+    if copied_files.is_empty() {
+        return Err(anyhow::anyhow!("No theme files (.css or directories) were found to install."));
+    }
+
+    // Determine theme name from primary css file
+    let mut primary_css = None;
+    for file in &copied_files {
+        if file.ends_with(".css") {
+            primary_css = Some(file.strip_suffix(".css").unwrap().to_string());
+            break;
+        }
+    }
+
+    let theme_name = if let Some(css_name) = primary_css {
+        css_name
+    } else {
+        // Fallback to URL's repository/file name
+        url.split('/')
+            .last()
+            .unwrap_or("unknown")
+            .trim_end_matches(".git")
+            .trim_end_matches(".zip")
+            .to_string()
+    };
+
+    // Save to manifest
+    let mut manifest = Manifest::load()?;
+    let entry = ThemeEntry {
+        name: theme_name.clone(),
+        source: url.to_string(),
+        installed_at: chrono::Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
+        files: copied_files,
+    };
+    manifest.add_theme(entry);
+    manifest.save()?;
+
+    println!("{}", format!("Theme '{}' successfully installed!", theme_name).green().bold());
     Ok(())
 }
 

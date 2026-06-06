@@ -1,7 +1,7 @@
 [package]
 name = "tytm"
-version = "0.3.2"
-edition = "2021"
+version = "0.4.0"
+edition = "2024"
 
 [dependencies]
 # File system
@@ -16,3 +16,8 @@ reqwest = { version = "0.12", features = ["blocking"] }
 # Else
 anyhow = "1.0"
 clap = { version = "4.5", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+comfy-table = "7.1"
+colored = "2.1"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
