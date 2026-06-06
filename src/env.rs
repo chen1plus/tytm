@@ -2,12 +2,13 @@ use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
 use std::{fs, io};
 
+#[cfg(not(debug_assertions))]
 /// The user's data directory.
 static DATA: LazyLock<PathBuf> =
     LazyLock::new(|| dirs::data_dir().expect("Failed to find user's data directory"));
 
 #[cfg(debug_assertions)]
-static TYPORA: LazyLock<PathBuf> = LazyLock::new(|| PathBuf::from("debug-dirs").join("Typora"));
+static TYPORA: LazyLock<PathBuf> = LazyLock::new(|| PathBuf::from("debug").join("Typora"));
 #[cfg(all(not(debug_assertions), target_os = "windows"))]
 static TYPORA: LazyLock<PathBuf> = LazyLock::new(|| DATA.join("Typora"));
 #[cfg(all(not(debug_assertions), target_os = "macos"))]
@@ -15,13 +16,17 @@ static TYPORA: LazyLock<PathBuf> = LazyLock::new(|| DATA.join("abnerworks.Typora
 
 pub static TYPORA_THEME: LazyLock<PathBuf> = LazyLock::new(|| TYPORA.join("themes"));
 
+#[cfg(debug_assertions)]
+static TYTM: LazyLock<PathBuf> = LazyLock::new(|| PathBuf::from("debug").join("tytm"));
+#[cfg(not(debug_assertions))]
 static TYTM: LazyLock<PathBuf> = LazyLock::new(|| DATA.join("tytm"));
 
 #[cfg(debug_assertions)]
 pub fn init() {
-    ensure_dir("debug-dirs").unwrap();
+    ensure_dir("debug").unwrap();
     ensure_dir(TYPORA.as_path()).unwrap();
     ensure_dir(TYPORA_THEME.as_path()).unwrap();
+    ensure_dir(TYTM.as_path()).unwrap();
 }
 
 #[cfg(not(debug_assertions))]
