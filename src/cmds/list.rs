@@ -64,6 +64,7 @@ pub fn entry() -> anyhow::Result<()> {
         .set_header(vec![
             Cell::new("Status").add_attribute(Attribute::Bold),
             Cell::new("Theme Name").add_attribute(Attribute::Bold),
+            Cell::new("Version").add_attribute(Attribute::Bold),
             Cell::new("Source Package / URL").add_attribute(Attribute::Bold),
             Cell::new("Date").add_attribute(Attribute::Bold),
         ]);
@@ -93,9 +94,23 @@ pub fn entry() -> anyhow::Result<()> {
         }
 
         if let Some(pkg) = belonging_pkg {
+            let version_str = match &pkg.version {
+                Some(ver) => {
+                    if ver.len() == 40 && ver.chars().all(|c| c.is_ascii_hexdigit()) {
+                        ver[..7].to_string()
+                    } else if ver.len() > 10 {
+                        format!("{}...", &ver[..10])
+                    } else {
+                        ver.clone()
+                    }
+                }
+                None => "-".to_string(),
+            };
+
             table.add_row(vec![
                 Cell::new("Managed").fg(Color::Green).add_attribute(Attribute::Bold),
                 Cell::new(&theme_name).add_attribute(Attribute::Bold),
+                Cell::new(&version_str),
                 Cell::new(&pkg.source),
                 Cell::new(&pkg.installed_at),
             ]);
@@ -103,6 +118,7 @@ pub fn entry() -> anyhow::Result<()> {
             table.add_row(vec![
                 Cell::new("Manual").fg(Color::Yellow),
                 Cell::new(&theme_name),
+                Cell::new("-"),
                 Cell::new("Manual Installation").fg(Color::DarkGrey),
                 Cell::new(&modified_str),
             ]);

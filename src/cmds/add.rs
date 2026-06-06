@@ -18,22 +18,36 @@ pub enum UrlType {
 pub fn entry(url: &str, url_type: UrlType) -> anyhow::Result<()> {
     let tmp_dir = tempdir()?;
 
-    match url_type {
+    let version = match url_type {
         UrlType::Git => {
             println!("{}", "Cloning theme repository...".cyan());
-            git2::Repository::clone(url, &tmp_dir)?;
+            let repo = git2::Repository::clone(url, &tmp_dir)?;
+            let head = repo.head()?;
+            let commit = head.peel_to_commit()?;
+            Some(commit.id().to_string())
         }
 
         UrlType::Zip => {
             let mut tmp_file = tempfile()?;
 
             println!("{}", "Downloading theme zip...".cyan());
-            reqwest::blocking::get(url)?.copy_to(&mut tmp_file)?;
+            let mut response = reqwest::blocking::get(url)?;
+            let headers = response.headers().clone();
+            response.copy_to(&mut tmp_file)?;
 
             println!("{}", "Extracting zip archive...".cyan());
             ZipArchive::new(tmp_file)?.extract(&tmp_dir)?;
+
+            headers.get(reqwest::header::ETAG)
+                .and_then(|v| v.to_str().ok())
+                .map(|s| s.trim_matches('"').to_string())
+                .or_else(|| {
+                    headers.get(reqwest::header::LAST_MODIFIED)
+                        .and_then(|v| v.to_str().ok())
+                        .map(|s| s.to_string())
+                })
         }
-    }
+    };
 
     let base = find_base_dir(tmp_dir.path())?;
     let mut copied_files = Vec::new();
@@ -83,6 +97,7 @@ pub fn entry(url: &str, url_type: UrlType) -> anyhow::Result<()> {
     let entry = ThemeEntry {
         name: theme_name.clone(),
         source: url.to_string(),
+        version,
         installed_at: chrono::Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
         files: copied_files,
     };
