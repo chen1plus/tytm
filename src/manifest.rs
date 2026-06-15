@@ -1,67 +1,72 @@
-use std::collections::HashMap;
-use std::fs;
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use std::io;
+use std::{collections::HashMap, fs};
+use std::{path::Path, sync::LazyLock};
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct ThemeEntry {
-    pub name: String,
-    pub source: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub version: Option<String>,
-    pub installed_at: String,
-    pub files: Vec<String>, // Relative paths to TYPORA_THEME directory
-}
+use crate::fsx::TYPORA_THEME;
+use crate::source::{Source, Variant};
 
-fn default_manifest_version() -> String {
-    "1".to_string()
-}
+pub static TYTM_REGISTRY: LazyLock<Manifest> =
+    LazyLock::new(|| serde_json::from_str(include_str!("registry.json")).unwrap());
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Manifest {
-    #[serde(default = "default_manifest_version")]
-    pub manifest_version: String,
-    pub themes: HashMap<String, ThemeEntry>,
-}
-
-impl Default for Manifest {
-    fn default() -> Self {
-        Self {
-            manifest_version: default_manifest_version(),
-            themes: HashMap::new(),
-        }
-    }
-}
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Manifest(pub HashMap<String, Theme>);
 
 impl Manifest {
-    pub fn load() -> anyhow::Result<Self> {
-        let path = crate::env::manifest_path();
-        if !path.exists() {
-            return Ok(Self::default());
+    pub fn load(path: &Path) -> Result<Self> {
+        if !path.is_file() {
+            return Ok(Self(HashMap::new()));
         }
-        let content = fs::read_to_string(path)?;
-        // If manifest is empty or corrupt, fallback to default rather than erroring out
-        let manifest: Self = serde_json::from_str(&content).unwrap_or_default();
-        if manifest.manifest_version != default_manifest_version() {
-            return Ok(Self::default());
-        }
-        Ok(manifest)
+        let file = fs::read_to_string(path)?;
+        Ok(serde_json::from_str(&file)?)
     }
 
-    pub fn save(&self) -> anyhow::Result<()> {
-        let path = crate::env::manifest_path();
-        if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent)?;
+    pub fn save(&self, path: &Path) -> Result<()> {
+        Ok(fs::write(path, serde_json::to_string(self)?)?)
+    }
+
+    async fn update(&mut self) -> Result<()> {
+        for theme in self.0.values_mut() {
+            let v = theme.version.clone().unwrap_or_default();
+            theme.version = Some(theme.source.update(&theme.variants, &v).await?);
         }
-        let content = serde_json::to_string_pretty(self)?;
-        fs::write(path, content)?;
         Ok(())
     }
+}
 
-    pub fn add_theme(&mut self, entry: ThemeEntry) {
-        self.themes.insert(entry.name.clone(), entry);
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Theme {
+    homepage: String,
+    pub name: String,
+    pub source: Source,
+    typora: Option<String>,
+    pub variants: Vec<Variant>,
+    version: Option<String>,
+}
+
+impl Theme {
+    /// Remove the variant and return true if the theme completely removed.
+    fn remove(&mut self, variants: &[Variant]) -> io::Result<bool> {
+        for variant in variants.iter() {
+            if let Some(idx) = self.variants.iter().position(|x| x == variant) {
+                fs::remove_file(TYPORA_THEME.join(&variant.file))?;
+                self.variants.remove(idx);
+            }
+        }
+
+        if self.variants.is_empty() {
+            self.remove_all()?;
+            return Ok(true);
+        }
+        Ok(false)
     }
 
-    pub fn remove_theme(&mut self, name: &str) -> Option<ThemeEntry> {
-        self.themes.remove(name)
+    pub fn remove_all(&self) -> io::Result<()> {
+        self.source.remove_files()?;
+        for variant in self.variants.iter() {
+            fs::remove_file(TYPORA_THEME.join(&variant.file))?;
+        }
+        Ok(())
     }
 }

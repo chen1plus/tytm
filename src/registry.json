@@ -1,0 +1,17 @@
+{
+  "lapis": {
+    "homepage": "https://github.com/YiNNx/typora-theme-lapis",
+    "name": "Lapis",
+    "source": {
+      "files": ["lapis"],
+      "gh_owner": "YiNNx",
+      "gh_repo": "typora-theme-lapis",
+      "regex": "typora-(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [
+      { "file": "lapis-dark.css", "name": "Dark" },
+      { "file": "lapis.css", "name": "Light" }
+    ]
+  }
+}
