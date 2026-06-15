@@ -1,66 +1,56 @@
-use std::path::PathBuf;
+use anyhow::{Result, anyhow};
 use std::{fs, io, path::Path};
+use std::{path::PathBuf, sync::LazyLock};
 
-// An object that represents a file or a whole directory.
-// note: can not be root directory
-#[derive(Clone, PartialEq, Eq, Hash)]
-pub(crate) struct Obj(PathBuf);
+pub static TYPORA_THEME: LazyLock<PathBuf> = LazyLock::new(|| {
+    let _data = dirs::data_dir().expect("Failed to locate user's data directory.");
 
-impl Obj {
-    pub(crate) fn move_to<P: AsRef<Path>>(&mut self, to: P) -> io::Result<()> {
-        debug_assert!(to.as_ref().is_dir());
+    #[cfg(target_os = "linux")]
+    let _dir = "typora"; // TODO
+    #[cfg(target_os = "macos")]
+    let _dir = "abnerworks.Typora";
+    #[cfg(target_os = "windows")]
+    let _dir = "Typora";
 
-        let dst_path = to.as_ref().join(&self.0.file_name().unwrap());
-        if self.0.is_dir() {
-            if !dst_path.exists() {
-                fs::create_dir(&dst_path)?;
-            }
-            for item in fs::read_dir(&self.0)? {
-                Self(item?.path()).move_to(&dst_path)?;
-            }
-        } else {
-            fs::rename(&self.0, &dst_path)?;
-        }
-
-        *self = Self(dst_path);
-        Ok(())
+    match cfg!(debug_assertions) {
+        true => PathBuf::from("debug"),
+        false => _data.join(_dir).join("themes"),
     }
+});
 
-    // move all files and directories inside the object to `to`
-    // if object is a file, it will be moved to `to` as well
-    pub(crate) fn move_inside_to<P: AsRef<Path>>(&mut self, to: P) -> io::Result<()> {
-        debug_assert!(to.as_ref().is_dir());
+pub static TYTM_INSTALLED: LazyLock<PathBuf> =
+    LazyLock::new(|| TYPORA_THEME.join("tytm").join("installed.json"));
 
-        if self.0.is_dir() {
-            for item in fs::read_dir(&self.0)? {
-                Self(item?.path()).move_to(&to)?;
-            }
-            *self = Self(to.as_ref().to_owned());
-        } else {
-            let dst_path = to.as_ref().join(&self.0.file_name().unwrap());
-            fs::rename(&self.0, &dst_path)?;
-            *self = Self(dst_path);
-        }
-        Ok(())
-    }
-
-    pub(crate) fn remove(self) -> io::Result<()> {
-        if self.0.is_dir() {
-            fs::remove_dir_all(&self.0)
-        } else {
-            fs::remove_file(&self.0)
+/// Find the base directory from `path` that contains the `target` file.
+pub fn find_base_dir(path: &Path, target: &str) -> Result<PathBuf> {
+    for file in path.read_dir()? {
+        if file?
+            .file_name()
+            .to_str()
+            .ok_or(anyhow!("Failed to convert file name to string."))?
+            == target
+        {
+            return Ok(path.to_owned());
         }
     }
+
+    for file in path.read_dir()? {
+        let file = file?;
+        if file.file_type()?.is_dir() {
+            if let Ok(ret) = find_base_dir(&file.path(), target) {
+                return Ok(ret);
+            }
+        }
+    }
+
+    Err(anyhow!("Unable to locate the base directory."))
 }
 
-impl From<PathBuf> for Obj {
-    fn from(path: PathBuf) -> Self {
-        Self(path)
-    }
-}
-
-impl AsRef<Path> for Obj {
-    fn as_ref(&self) -> &Path {
-        &self.0
+/// Remove the directory or file at `path`.
+pub fn remove_item(path: &Path) -> io::Result<()> {
+    if path.is_dir() {
+        fs::remove_dir_all(path)
+    } else {
+        fs::remove_file(path)
     }
 }
