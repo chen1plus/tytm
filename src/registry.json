@@ -1,4 +1,33 @@
 {
+  "blackout": {
+    "homepage": "https://obscurefreeman.github.io/typora_theme_blackout",
+    "name": "Blackout",
+    "source": {
+      "files": ["obscurefreeman"],
+      "gh_owner": "obscurefreeman",
+      "gh_repo": "typora_theme_blackout",
+      "regex": "blackout_theme_pack(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [
+      { "file": "blackout.css", "name": "Blackout" },
+      { "file": "blackout-gamer.css", "name": "Blackout Gamer" },
+      { "file": "chernobyl.css", "name": "Chernobyl" },
+      { "file": "chernobyl-blue.css", "name": "Chernobyl Blue" }
+    ]
+  },
+  "blubook": {
+    "homepage": "https://github.com/HanryYu/typora-blubook-theme",
+    "name": "Blubook",
+    "source": {
+      "files": ["blubook"],
+      "gh_owner": "HanryYu",
+      "gh_repo": "typora-blubook-theme",
+      "regex": "Blubook_(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [{ "file": "blubook.css", "name": "Blubook" }]
+  },
   "lapis": {
     "homepage": "https://github.com/YiNNx/typora-theme-lapis",
     "name": "Lapis",
@@ -13,5 +42,27 @@
       { "file": "lapis-dark.css", "name": "Dark" },
       { "file": "lapis.css", "name": "Light" }
     ]
+  },
+  "maize": {
+    "homepage": "https://theme.typora.io/theme/Maize",
+    "name": "Maize",
+    "source": {
+      "files": ["maize"],
+      "type": "Git",
+      "url": "https://github.com/BEATREE/typora-maize-theme"
+    },
+    "variants": [{ "file": "maize.css", "name": "Maize" }]
+  },
+  "torillic": {
+    "homepage": "https://github.com/TEParsons/typora-torillic",
+    "name": "Torillic",
+    "source": {
+      "files": ["torillic"],
+      "gh_owner": "TEParsons",
+      "gh_repo": "typora-torillic",
+      "regex": "torillic(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [{ "file": "torillic.css", "name": "Torillic" }]
   }
 }
