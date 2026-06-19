@@ -2,12 +2,12 @@
 
 A theme package manager for Typora.
 
-## Current Features
+## Features
 
-- [x] Add a theme
-- [x] Remove a theme
+- [x] Add theme by ID (from registry)
+- [x] Remove installed theme
 - [x] List installed themes
-- [ ] Update manifest
+- [x] Update installed themes
 
 ## Installation
 
@@ -44,26 +44,31 @@ tytm list
 ### Add a Theme
 
 ```sh
-tytm add <URL>
+tytm add <THEME_ID>
 ```
 
-The URL should point to a git repository or a zip file of the theme.
+Installs the specified theme from the built-in registry (`src/registry.json`).
 
-You can optionally specify the URL type (`git` or `zip`):
+Supported themes in the registry:
+- `blackout` (Blackout)
+- `blubook` (Blubook)
+- `lapis` (Lapis)
+- `maize` (Maize)
+- `torillic` (Torillic)
+
+### Update Themes
 
 ```sh
-tytm add <URL> -u <git|zip>
+tytm update
 ```
+
+Updates all installed themes to their latest version.
 
 ### Remove a Theme
 
 ```sh
-tytm remove <THEME>
-# alias: tytm rm <THEME>
+tytm remove <THEME_ID>
+# alias: tytm rm <THEME_ID>
 ```
 
-To remove specific sub-packages of a theme:
-
-```sh
-tytm remove <THEME> -s <SUB>
-```
+Removes the specified theme and all its associated CSS styles and files.
