@@ -14,6 +14,14 @@ pub static TYTM_REGISTRY: LazyLock<Manifest> =
 pub struct Manifest(pub HashMap<String, Theme>);
 
 impl Manifest {
+    pub async fn update(&mut self) -> Result<()> {
+        for theme in self.0.values_mut() {
+            let v = theme.version.clone().unwrap_or_default();
+            theme.version = Some(theme.source.update(&theme.variants, &v).await?);
+        }
+        Ok(())
+    }
+
     pub fn load(path: &Path) -> Result<Self> {
         if !path.is_file() {
             return Ok(Self(HashMap::new()));
@@ -24,14 +32,6 @@ impl Manifest {
 
     pub fn save(&self, path: &Path) -> Result<()> {
         Ok(fs::write(path, serde_json::to_string(self)?)?)
-    }
-
-    async fn update(&mut self) -> Result<()> {
-        for theme in self.0.values_mut() {
-            let v = theme.version.clone().unwrap_or_default();
-            theme.version = Some(theme.source.update(&theme.variants, &v).await?);
-        }
-        Ok(())
     }
 }
 
