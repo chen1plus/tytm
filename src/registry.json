@@ -17,7 +17,7 @@
     ]
   },
   "blubook": {
-    "homepage": "https://github.com/HanryYu/typora-blubook-theme",
+    "homepage": "https://theme.typora.io/theme/Blubook",
     "name": "Blubook",
     "source": {
       "files": ["blubook"],
@@ -29,7 +29,7 @@
     "variants": [{ "file": "blubook.css", "name": "Blubook" }]
   },
   "lapis": {
-    "homepage": "https://github.com/YiNNx/typora-theme-lapis",
+    "homepage": "https://theme.typora.io/theme/Lapis",
     "name": "Lapis",
     "source": {
       "files": ["lapis"],
@@ -54,7 +54,7 @@
     "variants": [{ "file": "maize.css", "name": "Maize" }]
   },
   "torillic": {
-    "homepage": "https://github.com/TEParsons/typora-torillic",
+    "homepage": "https://theme.typora.io/theme/Torillic",
     "name": "Torillic",
     "source": {
       "files": ["torillic"],
