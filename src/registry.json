@@ -1,4 +1,61 @@
 {
+  "academic": {
+    "homepage": "https://theme.typora.io/theme/Academic",
+    "name": "Academic",
+    "source": {
+      "files": ["academic"],
+      "type": "Zip",
+      "url": "https://raw.githubusercontent.com/typora/typora-theme-gallery/gh-pages/media/theme/academic/academic.zip"
+    },
+    "variants": [{ "file": "academic.css", "name": "Academic" }]
+  },
+  "ash": {
+    "homepage": "https://theme.typora.io/theme/Ash",
+    "name": "Ash",
+    "source": {
+      "files": ["ash"],
+      "type": "Git",
+      "url": "https://github.com/typora/typora-ash-theme"
+    },
+    "variants": [{ "file": "ash.css", "name": "Ash" }]
+  },
+  "autumnus": {
+    "homepage": "https://theme.typora.io/theme/autumnus",
+    "name": "Autumnus",
+    "source": {
+      "files": ["autumnus"],
+      "type": "Git",
+      "url": "https://github.com/Soanguy/typora-theme-autumnus"
+    },
+    "variants": [
+      { "file": "autumnus.css", "name": "Light" },
+      { "file": "autumnus-dark.css", "name": "Dark" },
+      { "file": "autumnus-dark-fluent.css", "name": "Dark Fluent" },
+      { "file": "autumnus-light-fluent.css", "name": "Light Fluent" },
+      { "file": "autumnus-lless-dark.css", "name": "Less Dark" },
+      { "file": "autumnus-lless-dark-fluent.css", "name": "Less Dark Fluent" },
+      { "file": "autumnus-lless-light.css", "name": "Less Light" },
+      {
+        "file": "autumnus-lless-light-fluent.css",
+        "name": "Less Light Fluent"
+      },
+      { "file": "autumnus-lless-light-print.css", "name": "Less Light Print" },
+      { "file": "autumnus-opt.css", "name": "Opt Light" },
+      { "file": "autumnus-opt-dark.css", "name": "Opt Dark" },
+      { "file": "autumnus-opt-dark-fluent.css", "name": "Opt Dark Fluent" },
+      { "file": "autumnus-opt-light-fluent.css", "name": "Opt Light Fluent" }
+    ]
+  },
+  "barfi": {
+    "homepage": "https://theme.typora.io/theme/Barfi",
+    "name": "Barfi",
+    "source": {
+      "files": ["barfi"],
+      "type": "Zip",
+      "url": "https://github.com/ujwaljain/typora-theme-gallery/releases/download/1.0/barfi.zip"
+    },
+    "variants": [{ "file": "barfi.css", "name": "Barfi" }]
+  },
   "blackout": {
     "homepage": "https://obscurefreeman.github.io/typora_theme_blackout",
     "name": "Blackout",
@@ -28,6 +85,72 @@
     },
     "variants": [{ "file": "blubook.css", "name": "Blubook" }]
   },
+  "catfish": {
+    "homepage": "https://theme.typora.io/theme/Catfish",
+    "name": "Catfish",
+    "source": {
+      "files": ["catfish"],
+      "type": "Git",
+      "url": "https://github.com/leaf-hsiao/catfish"
+    },
+    "variants": [{ "file": "catfish.css", "name": "Catfish" }]
+  },
+  "cobalt": {
+    "homepage": "https://theme.typora.io/theme/cobalt",
+    "name": "Cobalt",
+    "source": {
+      "files": ["cobalt"],
+      "gh_owner": "elitistsnob",
+      "gh_repo": "typora-cobalt-theme",
+      "regex": "typora-(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [{ "file": "cobalt.css", "name": "Cobalt" }]
+  },
+  "dracula": {
+    "homepage": "https://theme.typora.io/theme/Dracula",
+    "name": "Dracula",
+    "source": {
+      "files": ["dracula"],
+      "type": "Git",
+      "url": "https://github.com/Teyler7/dracula-typora-theme"
+    },
+    "variants": [{ "file": "dracula.css", "name": "Dracula" }]
+  },
+  "gitlab": {
+    "homepage": "https://theme.typora.io/theme/gitlab",
+    "name": "GitLab",
+    "source": {
+      "files": ["gitlab"],
+      "gh_owner": "elitistsnob",
+      "gh_repo": "typora-gitlab-theme",
+      "regex": "typora-(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [{ "file": "gitlab.css", "name": "GitLab" }]
+  },
+  "inside": {
+    "homepage": "https://theme.typora.io/theme/Inside",
+    "name": "Inside",
+    "source": {
+      "files": ["Inside"],
+      "gh_owner": "HanryYu",
+      "gh_repo": "typora-inside-theme",
+      "regex": "inside_(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [{ "file": "inside.css", "name": "Inside" }]
+  },
+  "jamstatic": {
+    "homepage": "https://theme.typora.io/theme/JAMstatic",
+    "name": "Jamstatic",
+    "source": {
+      "files": ["jamstatic"],
+      "type": "Git",
+      "url": "https://github.com/jamstatic/Typora-theme"
+    },
+    "variants": [{ "file": "jamstatic.css", "name": "Jamstatic" }]
+  },
   "lapis": {
     "homepage": "https://theme.typora.io/theme/Lapis",
     "name": "Lapis",
@@ -39,8 +162,21 @@
       "type": "GhReleaseZip"
     },
     "variants": [
-      { "file": "lapis-dark.css", "name": "Dark" },
-      { "file": "lapis.css", "name": "Light" }
+      { "file": "lapis.css", "name": "Light" },
+      { "file": "lapis-dark.css", "name": "Dark" }
+    ]
+  },
+  "lavender": {
+    "homepage": "https://theme.typora.io/theme/Lavender",
+    "name": "Lavender",
+    "source": {
+      "files": ["lavender"],
+      "type": "Git",
+      "url": "https://github.com/JARVIS-AI/Typora-Lavender-Theme"
+    },
+    "variants": [
+      { "file": "lavender.css", "name": "Normal" },
+      { "file": "rtl-lavender.css", "name": "RTL" }
     ]
   },
   "maize": {
@@ -53,6 +189,98 @@
     },
     "variants": [{ "file": "maize.css", "name": "Maize" }]
   },
+  "monospace": {
+    "homepage": "https://theme.typora.io/theme/Monospace",
+    "name": "Monospace",
+    "source": {
+      "files": ["monospace"],
+      "type": "Git",
+      "url": "https://github.com/typora/typora-monospace-theme"
+    },
+    "variants": [
+      { "file": "monospace.css", "name": "Light" },
+      { "file": "monospace-dark.css", "name": "Dark" }
+    ]
+  },
+  "next": {
+    "homepage": "https://theme.typora.io/theme/NexT",
+    "name": "NexT",
+    "source": {
+      "files": ["next"],
+      "gh_owner": "jtchen2k",
+      "gh_repo": "typora-theme-next",
+      "regex": "typora-(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [
+      { "file": "next.css", "name": "Light" },
+      { "file": "next-dark.css", "name": "Dark" },
+      { "file": "next-dark-helvetica.css", "name": "Dark Helvetica" },
+      { "file": "next-helvetica.css", "name": "Light Helvetica" }
+    ]
+  },
+  "nocturne": {
+    "homepage": "https://theme.typora.io/theme/nocturne",
+    "name": "Nocturne",
+    "source": {
+      "files": ["nocturne"],
+      "type": "Git",
+      "url": "https://github.com/suhan42/typora-nocturne-theme"
+    },
+    "variants": [{ "file": "nocturne.css", "name": "Nocturne" }]
+  },
+  "nord": {
+    "homepage": "https://theme.typora.io/theme/Nord",
+    "name": "Nord",
+    "source": {
+      "files": ["nord"],
+      "gh_owner": "ChristosBouronikos",
+      "gh_repo": "typora-nord-theme",
+      "regex": "Typora(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [{ "file": "nord.css", "name": "Nord" }]
+  },
+  "onigiri": {
+    "homepage": "https://theme.typora.io/theme/Onigiri",
+    "name": "Onigiri",
+    "source": {
+      "files": ["onigiri"],
+      "type": "Git",
+      "url": "https://github.com/kaisugi/Typora-Onigiri"
+    },
+    "variants": [
+      { "file": "onigiri.css", "name": "Light" },
+      { "file": "onigiri-night.css", "name": "Night" }
+    ]
+  },
+  "paper": {
+    "homepage": "https://theme.typora.io/theme/paper",
+    "name": "Paper",
+    "source": {
+      "files": ["paper"],
+      "type": "Git",
+      "url": "https://github.com/IagoLast/paper"
+    },
+    "variants": [{ "file": "paper.css", "name": "Paper" }]
+  },
+  "purple": {
+    "homepage": "https://theme.typora.io/theme/Purple",
+    "name": "Purple",
+    "source": {
+      "files": [],
+      "type": "Git",
+      "url": "https://github.com/hliu202/typora-purple-theme"
+    },
+    "variants": [
+      { "file": "purple.css", "name": "Modern" },
+      { "file": "purple-blue.css", "name": "Blue" },
+      { "file": "purple-cesno.css", "name": "Cesno" },
+      { "file": "purple-classic.css", "name": "Classic" },
+      { "file": "purple-green.css", "name": "Green" },
+      { "file": "purple-plain.css", "name": "Plain" }
+    ]
+  },
   "torillic": {
     "homepage": "https://theme.typora.io/theme/Torillic",
     "name": "Torillic",
@@ -64,5 +292,15 @@
       "type": "GhReleaseZip"
     },
     "variants": [{ "file": "torillic.css", "name": "Torillic" }]
+  },
+  "turing": {
+    "homepage": "https://theme.typora.io/theme/Turing",
+    "name": "Turing",
+    "source": {
+      "files": [],
+      "type": "Git",
+      "url": "https://github.com/wangjs-jacky/Turing-CSS"
+    },
+    "variants": [{ "file": "turing.css", "name": "Turing" }]
   }
 }
