@@ -17,7 +17,7 @@ pub enum Source {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Variant {
     pub file: String,
-    name: String,
+    pub name: String,
 }
 
 impl Source {
