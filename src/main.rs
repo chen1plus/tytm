@@ -18,8 +18,6 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    // /// Update the registry and installed themes
-    // Update,
     /// Add a new theme
     Add {
         /// The theme ID or URL
@@ -42,18 +40,10 @@ enum Commands {
         // #[arg(short, long)]
         // sub: Option<Vec<String>>,
     },
-}
 
-// fn is_url_or_path(s: &str) -> bool {
-//     s.starts_with("http://")
-//         || s.starts_with("https://")
-//         || s.starts_with("git@")
-//         || s.starts_with("git://")
-//         || s.ends_with(".git")
-//         || s.ends_with(".zip")
-//         || s.contains('/')
-//         || s.contains('\\')
-// }
+    /// Update all installed themes
+    Update,
+}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -89,78 +79,11 @@ async fn main() -> anyhow::Result<()> {
             installed.0.remove(&theme);
             installed.save(&TYTM_INSTALLED)?;
         }
+
+        Commands::Update => {
+            installed.update().await?;
+            installed.save(&TYTM_INSTALLED)?;
+        }
     }
-    // match cli.command {
-    //     Commands::Update => {
-    //         cmds::update::entry()?;
-    //     }
-
-    //     Commands::Add {
-    //         theme,
-    //         url,
-    //         url_type,
-    //     } => {
-    //         let (resolved_url, resolved_type) = if let Some(u) = url {
-    //             let t = match url_type {
-    //                 Some(t) => t,
-    //                 None => {
-    //                     if u.ends_with(".git") {
-    //                         cmds::add::UrlType::Git
-    //                     } else if u.ends_with(".zip") {
-    //                         cmds::add::UrlType::Zip
-    //                     } else {
-    //                         return Err(anyhow::anyhow!("Failed to determine the url type"));
-    //                     }
-    //                 }
-    //             };
-    //             (u, t)
-    //         } else {
-    //             let theme_str = theme.unwrap();
-    //             if is_url_or_path(&theme_str) {
-    //                 let t = match url_type {
-    //                     Some(t) => t,
-    //                     None => {
-    //                         if theme_str.ends_with(".git") {
-    //                             cmds::add::UrlType::Git
-    //                         } else if theme_str.ends_with(".zip") {
-    //                             cmds::add::UrlType::Zip
-    //                         } else {
-    //                             return Err(anyhow::anyhow!("Failed to determine the url type"));
-    //                         }
-    //                     }
-    //                 };
-    //                 (theme_str, t)
-    //             } else {
-    //                 let registry = registry::Registry::load()?;
-    //                 if let Some(entry) = registry.themes.get(&theme_str) {
-    //                     let t = match url_type {
-    //                         Some(t) => t,
-    //                         None => match entry.url_type.as_str() {
-    //                             "git" => cmds::add::UrlType::Git,
-    //                             "zip" => cmds::add::UrlType::Zip,
-    //                             _ => return Err(anyhow::anyhow!("Unknown url type in registry")),
-    //                         },
-    //                     };
-    //                     (entry.url.clone(), t)
-    //                 } else {
-    //                     return Err(anyhow::anyhow!(
-    //                         "Theme '{}' not found in registry",
-    //                         theme_str
-    //                     ));
-    //                 }
-    //             }
-    //         };
-    //         cmds::add::entry(&resolved_url, resolved_type)?;
-    //     }
-
-    //     Commands::Remove { theme, sub } => {
-    //         cmds::remove::entry(theme, sub)?;
-    //     }
-
-    //     Commands::List => {
-    //         cmds::list::entry()?;
-    //     }
-    // }
-
     Ok(())
 }
