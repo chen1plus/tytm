@@ -40,7 +40,6 @@ pub struct Theme {
     homepage: String,
     pub name: String,
     pub source: Source,
-    typora: Option<String>,
     pub variants: Vec<Variant>,
     version: Option<String>,
 }
