@@ -46,7 +46,7 @@ pub struct Theme {
 
 impl Theme {
     /// Remove the variant and return true if the theme completely removed.
-    fn remove(&mut self, variants: &[Variant]) -> io::Result<bool> {
+    pub fn remove(&mut self, variants: &[Variant]) -> io::Result<bool> {
         for variant in variants.iter() {
             if let Some(idx) = self.variants.iter().position(|x| x == variant) {
                 fs::remove_file(TYPORA_THEME.join(&variant.file))?;

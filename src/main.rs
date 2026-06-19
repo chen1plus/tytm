@@ -22,9 +22,13 @@ enum Commands {
     Add {
         /// The theme ID or URL
         theme: String,
+
         // /// Use URL instead of ID
         // #[arg(long)]
         // url: bool,
+        /// The variants to install
+        #[arg(long, short)]
+        variant: Vec<String>,
     },
 
     /// List all installed themes
@@ -36,9 +40,10 @@ enum Commands {
     Remove {
         /// The theme ID
         theme: String,
-        // /// The sub-packages to remove
-        // #[arg(short, long)]
-        // sub: Option<Vec<String>>,
+
+        /// The variants to install
+        #[arg(long, short)]
+        variant: Vec<String>,
     },
 
     /// Update all installed themes
@@ -52,16 +57,31 @@ async fn main() -> anyhow::Result<()> {
 
     let cli = Cli::parse();
     match cli.command {
-        Commands::Add { theme } => {
-            if installed.0.keys().any(|x| x == &theme) {
+        Commands::Add {
+            theme: tid,
+            variant,
+        } => {
+            if installed.0.keys().any(|x| x == &tid) {
                 return Err(anyhow!("The theme was already installed."));
             }
 
-            let t = TYTM_REGISTRY.0.get(&theme);
+            let t = TYTM_REGISTRY.0.get(&tid);
             let t = t.ok_or(anyhow!("Could not find a theme with the provided ID."))?;
+            let vars = match variant.is_empty() {
+                true => t.variants.clone(),
+                false => t
+                    .variants
+                    .clone()
+                    .into_iter()
+                    .filter(|x| variant.contains(&x.name))
+                    .collect::<Vec<_>>(),
+            };
 
-            t.source.install(&t.variants).await?;
-            installed.0.insert(theme, t.clone());
+            let mut theme = t.clone();
+            theme.variants = vars.clone();
+            t.source.install(vars.as_slice()).await?;
+
+            installed.0.insert(tid, theme);
             installed.save(&TYTM_INSTALLED)?;
         }
 
@@ -71,12 +91,26 @@ async fn main() -> anyhow::Result<()> {
             }
         }
 
-        Commands::Remove { theme } => {
-            let t = installed.0.get(&theme);
+        Commands::Remove { theme, variant } => {
+            let t = installed.0.get_mut(&theme);
             let t = t.ok_or(anyhow!("Could not find a theme with the provided ID."))?;
 
-            t.remove_all()?;
-            installed.0.remove(&theme);
+            if variant.is_empty() {
+                t.remove_all()?;
+                installed.0.remove(&theme);
+            } else {
+                if t.remove(
+                    t.variants
+                        .clone()
+                        .into_iter()
+                        .filter(|x| variant.contains(&x.name))
+                        .collect::<Vec<_>>()
+                        .as_slice(),
+                )? {
+                    installed.0.remove(&theme);
+                }
+            }
+
             installed.save(&TYTM_INSTALLED)?;
         }
 
