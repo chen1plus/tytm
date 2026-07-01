@@ -35,7 +35,7 @@ impl Source {
         if match self {
             Source::GhReleaseZip(x) => &x.gh_latest().await?.tag_name == version,
             Source::Git(x) => !x.outdated(version)?,
-            Source::Zip(_) => false,
+            Source::Zip(_) => true,
         } {
             return Ok(version.to_string());
         }
@@ -131,7 +131,7 @@ impl GitInner {
             .list()?
             .iter()
             .find(|x| x.name() == "HEAD")
-            .ok_or(anyhow!("Could not find the default branch."))?
+            .ok_or(anyhow!("Cannot find the default branch."))?
             .oid();
 
         // Compare the latest commit hash with the provided one.

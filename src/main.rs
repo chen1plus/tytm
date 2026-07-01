@@ -67,7 +67,7 @@ async fn main() -> anyhow::Result<()> {
             }
 
             let t = TYTM_REGISTRY.0.get(&tid);
-            let t = t.ok_or(anyhow!("Could not find a theme with the provided ID."))?;
+            let t = t.ok_or(anyhow!("Cannot find a theme with the provided ID."))?;
 
             let vars: Vec<_> = if !variant.is_empty() {
                 t.variants
@@ -108,7 +108,7 @@ async fn main() -> anyhow::Result<()> {
 
         Commands::Remove { theme, variant } => {
             let t = installed.0.get_mut(&theme);
-            let t = t.ok_or(anyhow!("Could not find a theme with the provided ID."))?;
+            let t = t.ok_or(anyhow!("Cannot find a theme with the provided ID."))?;
 
             if variant.is_empty() {
                 t.remove_all()?;
