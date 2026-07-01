@@ -1,5 +1,6 @@
 use anyhow::anyhow;
 use clap::{Parser, Subcommand};
+use inquire::MultiSelect;
 use std::fs;
 
 mod fsx;
@@ -67,14 +68,28 @@ async fn main() -> anyhow::Result<()> {
 
             let t = TYTM_REGISTRY.0.get(&tid);
             let t = t.ok_or(anyhow!("Could not find a theme with the provided ID."))?;
-            let vars = match variant.is_empty() {
-                true => t.variants.clone(),
-                false => t
-                    .variants
+
+            let vars: Vec<_> = if !variant.is_empty() {
+                t.variants
                     .clone()
                     .into_iter()
                     .filter(|x| variant.contains(&x.name))
-                    .collect::<Vec<_>>(),
+                    .collect()
+            } else if t.variants.len() == 1 {
+                t.variants.clone()
+            } else {
+                let options: Vec<_> = t.variants.iter().map(|v| v.name.clone()).collect();
+                let selected = MultiSelect::new("Select variants to install:", options)
+                    .prompt()
+                    .map_err(|e| anyhow!("Variant selection cancelled: {e}"))?;
+                if selected.is_empty() {
+                    return Err(anyhow!("No variants selected."));
+                }
+                t.variants
+                    .clone()
+                    .into_iter()
+                    .filter(|x| selected.contains(&x.name))
+                    .collect()
             };
 
             let mut theme = t.clone();
