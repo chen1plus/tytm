@@ -49,6 +49,9 @@ enum Commands {
 
     /// Update all installed themes
     Update,
+
+    /// Open the Typora themes folder
+    Open,
 }
 
 #[tokio::main]
@@ -132,6 +135,23 @@ async fn main() -> anyhow::Result<()> {
         Commands::Update => {
             installed.update().await?;
             installed.save(&TYTM_INSTALLED)?;
+        }
+
+        Commands::Open => {
+            #[cfg(target_os = "macos")]
+            std::process::Command::new("open")
+                .arg(TYPORA_THEME.as_os_str())
+                .spawn()?;
+
+            #[cfg(target_os = "windows")]
+            std::process::Command::new("explorer")
+                .arg(TYPORA_THEME.as_os_str())
+                .spawn()?;
+
+            #[cfg(target_os = "linux")]
+            std::process::Command::new("xdg-open")
+                .arg(TYPORA_THEME.as_os_str())
+                .spawn()?;
         }
     }
     Ok(())
