@@ -10,11 +10,27 @@ clap = { version = "4.6", features = ["derive"] }
 dirs = "6.0"
 git2 = "0.21"
 inquire = "0.9"
-octocrab = "0.53"
+
+# This is a temporary fix for octocrab#855
+# Link: https://github.com/XAMPPRocky/octocrab/issues/855
+octocrab = {
+  default-features = false,
+  features = [
+    "default-client",
+    "follow-redirect",
+    "jwt-rust-crypto",
+    "retry",
+    "rustls",
+    "timeout",
+    "tracing",
+  ],
+  version = "0.53"
+}
+
 regex = "1.12"
-reqwest = "0.12"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tempfile = "3.27"
 tokio = { version = "1.52", features = ["full"] }
+trauma = "3.0"
 zip = "8.6"

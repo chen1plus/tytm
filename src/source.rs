@@ -1,6 +1,7 @@
 use anyhow::{Result, anyhow};
 use serde::{Deserialize, Serialize};
 use std::{fs, io};
+use trauma::{download::Download, downloader::Downloader};
 
 use crate::{fsx, fsx::TYPORA_THEME};
 
@@ -149,15 +150,29 @@ impl ZipInner {
     async fn install(&self, variants: &[Variant]) -> Result<String> {
         let tmp_dir = tempfile::tempdir()?;
 
-        // Download the zip file and extract it to a temporary directory.
-        let mut tmp_file = tempfile::tempfile()?;
-        let response = reqwest::get(&self.url).await?;
-        io::copy(&mut &response.bytes().await?[..], &mut tmp_file)?;
-        zip::ZipArchive::new(tmp_file)?.extract(&tmp_dir)?;
+        // Download the zip file with a progress bar.
+        let download = Download::builder().url(&self.url)?.build();
+        Downloader::builder()
+            .directory(tmp_dir.path().to_path_buf())
+            .build()
+            .download(&[download])
+            .await;
+
+        // Find the downloaded zip file.
+        let zip_path = fs::read_dir(tmp_dir.path())?
+            .filter_map(|e| e.ok())
+            .map(|e| e.path())
+            .find(|p| p.extension().map(|e| e == "zip").unwrap_or(false))
+            .ok_or(anyhow!("Downloaded zip file not found."))?;
+
+        // Extract the zip to a subdirectory.
+        let extract_dir = tmp_dir.path().join("extracted");
+        fs::create_dir_all(&extract_dir)?;
+        zip::ZipArchive::new(fs::File::open(&zip_path)?)?.extract(&extract_dir)?;
 
         // Find the base directory that contains the theme files.
         let v = variants.first().expect("At least one variant is required.");
-        let base = fsx::find_base_dir(tmp_dir.path(), &v.file)?;
+        let base = fsx::find_base_dir(&extract_dir, &v.file)?;
 
         // Copy files, including assets and variants.
         for file in self.files.iter().chain(variants.iter().map(|x| &x.file)) {
