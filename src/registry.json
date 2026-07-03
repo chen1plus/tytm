@@ -254,6 +254,28 @@
       { "file": "onigiri-night.css", "name": "Night" }
     ]
   },
+  "orangeheart": {
+    "homepage": "https://theme.typora.io/theme/OrangeHeart",
+    "name": "Orange Heart",
+    "source": {
+      "files": [],
+      "type": "Git",
+      "url": "https://github.com/evgo2017/typora-theme-orange-heart"
+    },
+    "variants": [{ "file": "orangeheart.css", "name": "Orange Heart" }]
+  },
+  "panda": {
+    "homepage": "https://theme.typora.io/theme/Panda",
+    "name": "Panda",
+    "source": {
+      "files": ["panda"],
+      "gh_owner": "gilbertohasnofb",
+      "gh_repo": "typora-panda-theme",
+      "regex": "panda(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [{ "file": "panda.css", "name": "Panda" }]
+  },
   "paper": {
     "homepage": "https://theme.typora.io/theme/paper",
     "name": "Paper",
@@ -263,6 +285,19 @@
       "url": "https://github.com/IagoLast/paper"
     },
     "variants": [{ "file": "paper.css", "name": "Paper" }]
+  },
+  "pie": {
+    "homepage": "https://theme.typora.io/theme/Pie",
+    "name": "Pie",
+    "source": {
+      "files": ["pie"],
+      "type": "Git",
+      "url": "https://github.com/kevinzhao2233/typora-theme-pie"
+    },
+    "variants": [
+      { "file": "pie.css", "name": "Light" },
+      { "file": "pie-dark.css", "name": "Dark" }
+    ]
   },
   "purple": {
     "homepage": "https://theme.typora.io/theme/Purple",
@@ -302,5 +337,49 @@
       "url": "https://github.com/wangjs-jacky/Turing-CSS"
     },
     "variants": [{ "file": "turing.css", "name": "Turing" }]
+  },
+  "ursine": {
+    "homepage": "https://theme.typora.io/theme/Ursine",
+    "name": "Ursine",
+    "source": {
+      "files": ["ursine"],
+      "gh_owner": "noatpad",
+      "gh_repo": "typora-theme-ursine",
+      "regex": "Ursine(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [
+      { "file": "ursine-polar.css", "name": "Light" },
+      { "file": "ursine-umbra.css", "name": "Dark" }
+    ]
+  },
+  "vue": {
+    "homepage": "https://theme.typora.io/theme/Vue",
+    "name": "Vue",
+    "source": {
+      "files": ["vue"],
+      "type": "Git",
+      "url": "https://github.com/blinkfox/typora-vue-theme"
+    },
+    "variants": [
+      { "file": "vue.css", "name": "Light" },
+      { "file": "vue-dark.css", "name": "Dark" }
+    ]
+  },
+  "xydark": {
+    "homepage": "https://theme.typora.io/theme/Xydark",
+    "name": "XyDark",
+    "source": {
+      "files": ["xydark"],
+      "type": "GhReleaseZip",
+      "gh_owner": "xypnox",
+      "gh_repo": "xydark-typora",
+      "regex": "theme(.+)"
+    },
+    "variants": [
+      { "file": "xydark.css", "name": "Dark" },
+      { "file": "xydarkfocus.css", "name": "Dark Focus" },
+      { "file": "xylight.css", "name": "Light" }
+    ]
   }
 }
