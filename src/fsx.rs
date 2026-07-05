@@ -21,6 +21,20 @@ pub static TYPORA_THEME: LazyLock<PathBuf> = LazyLock::new(|| {
 pub static TYTM_INSTALLED: LazyLock<PathBuf> =
     LazyLock::new(|| TYPORA_THEME.join("tytm").join("installed.json"));
 
+pub fn copy_dir(from: &Path, to: &Path) -> io::Result<()> {
+    fs::create_dir_all(to)?;
+    for f in fs::read_dir(from)? {
+        let f = f?;
+        let fpath = f.path();
+        let dest = to.join(f.file_name());
+        match fpath.is_dir() {
+            false => fs::copy(&fpath, &dest).map(|_| ())?,
+            true => copy_dir(&fpath, &dest)?,
+        }
+    }
+    Ok(())
+}
+
 /// Find the base directory from `path` that contains the `target` file.
 pub fn find_base_dir(path: &Path, target: &str) -> Result<PathBuf> {
     for file in path.read_dir()? {
@@ -44,6 +58,17 @@ pub fn find_base_dir(path: &Path, target: &str) -> Result<PathBuf> {
     }
 
     Err(anyhow!("Unable to locate the base directory."))
+}
+
+pub fn move_item(from: &Path, to: &Path) -> io::Result<()> {
+    if fs::rename(from, to).is_err() {
+        match from.is_dir() {
+            false => fs::copy(from, to).map(|_| ())?,
+            true => copy_dir(from, to)?,
+        }
+        remove_item(from)?;
+    }
+    Ok(())
 }
 
 /// Remove the directory or file at `path`.
