@@ -3,23 +3,25 @@ use std::{fs, io, path::Path};
 use std::{path::PathBuf, sync::LazyLock};
 
 pub static TYPORA_THEME: LazyLock<PathBuf> = LazyLock::new(|| {
+    let _config = dirs::config_dir().expect("Failed to locate user's config directory.");
     let _data = dirs::data_dir().expect("Failed to locate user's data directory.");
 
     #[cfg(target_os = "linux")]
-    let _dir = "typora"; // TODO
+    let _dir = _config.join("Typora");
     #[cfg(target_os = "macos")]
-    let _dir = "abnerworks.Typora";
+    let _dir = _data.join("abnerworks.Typora");
     #[cfg(target_os = "windows")]
-    let _dir = "Typora";
+    let _dir = _data.join("Typora");
 
     match cfg!(debug_assertions) {
         true => PathBuf::from("debug"),
-        false => _data.join(_dir).join("themes"),
+        false => _dir.join("themes"),
     }
 });
 
-pub static TYTM_INSTALLED: LazyLock<PathBuf> =
-    LazyLock::new(|| TYPORA_THEME.join("tytm").join("installed.json"));
+pub static TYTM_INSTALLED: LazyLock<PathBuf> = LazyLock::new(|| {
+    TYPORA_THEME.join("tytm").join("installed.json") //
+});
 
 pub fn copy_dir(from: &Path, to: &Path) -> io::Result<()> {
     fs::create_dir_all(to)?;
