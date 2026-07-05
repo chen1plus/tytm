@@ -1,6 +1,6 @@
 use anyhow::{Result, anyhow};
 use serde::{Deserialize, Serialize};
-use std::{fs, io};
+use std::{fs, fs::File, io};
 use trauma::{download::Download, downloader::Downloader};
 
 use crate::{fsx, fsx::TYPORA_THEME};
@@ -116,7 +116,7 @@ impl GitInner {
 
         // Copy files, including assets and variants.
         for file in self.files.iter().chain(variants.iter().map(|x| &x.file)) {
-            fs::rename(base.join(file), TYPORA_THEME.join(file))?;
+            fsx::move_item(&base.join(file), &TYPORA_THEME.join(file))?;
         }
 
         // Return the commit hash as the version.
@@ -168,7 +168,7 @@ impl ZipInner {
         // Extract the zip to a subdirectory.
         let extract_dir = tmp_dir.path().join("extracted");
         fs::create_dir_all(&extract_dir)?;
-        zip::ZipArchive::new(fs::File::open(&zip_path)?)?.extract(&extract_dir)?;
+        zip::ZipArchive::new(File::open(&zip_path)?)?.extract(&extract_dir)?;
 
         // Find the base directory that contains the theme files.
         let v = variants.first().expect("At least one variant is required.");
@@ -176,7 +176,7 @@ impl ZipInner {
 
         // Copy files, including assets and variants.
         for file in self.files.iter().chain(variants.iter().map(|x| &x.file)) {
-            fs::rename(base.join(file), TYPORA_THEME.join(file))?;
+            fsx::move_item(&base.join(file), &TYPORA_THEME.join(file))?;
         }
 
         // Return the time of installation as the version.
