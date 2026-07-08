@@ -105,7 +105,22 @@ async fn main() -> anyhow::Result<()> {
 
         Commands::List => {
             for (_, theme) in installed.0.iter() {
-                println!("{}", theme.name);
+                // Unwrap is safe because the list shouldn't be empty.
+                let v0name = &theme.variants.first().unwrap().name;
+
+                if theme.variants.iter().count() == 1 {
+                    match v0name == &theme.name {
+                        false => println!("{} — {}", theme.name, v0name),
+                        true => println!("{}", theme.name),
+                    }
+                    continue;
+                }
+
+                print!("{} — {}", theme.name, v0name);
+                for v in theme.variants.iter().skip(1) {
+                    print!(", {}", v.name);
+                }
+                println!();
             }
         }
 
