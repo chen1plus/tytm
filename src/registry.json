@@ -117,6 +117,30 @@
     },
     "variants": [{ "file": "dracula.css", "name": "Dracula" }]
   },
+  "engwrite": {
+    "homepage": "https://theme.typora.io/theme/Engwrite",
+    "name": "Engwrite",
+    "source": {
+      "files": [],
+      "type": "Git",
+      "url": "https://github.com/qqdaiyu55/engwrite-theme"
+    },
+    "variants": [{ "file": "engwrite.css", "name": "Engwrite" }]
+  },
+  "github-night": {
+    "homepage": "https://theme.typora.io/theme/Github-Night",
+    "name": "GitHub Night",
+    "source": {
+      "files": ["github-night"],
+      "type": "Git",
+      "url": "https://github.com/kinoute/typora-github-night-theme"
+    },
+    "variants": [
+      { "file": "github-night.css", "name": "Normal" },
+      { "file": "github-night-dimmed.css", "name": "Dimmed" },
+      { "file": "github-night-high-contrast.css", "name": "High Contrast" }
+    ]
+  },
   "gitlab": {
     "homepage": "https://theme.typora.io/theme/gitlab",
     "name": "GitLab",
@@ -189,6 +213,21 @@
     },
     "variants": [{ "file": "maize.css", "name": "Maize" }]
   },
+  "mo": {
+    "homepage": "https://theme.typora.io/theme/Mo",
+    "name": "Mo",
+    "source": {
+      "files": [],
+      "gh_owner": "MarMomento",
+      "gh_repo": "typora-mo-theme",
+      "regex": "typora-(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [
+      { "file": "mo.css", "name": "Light" },
+      { "file": "mo-dark.css", "name": "Dark" }
+    ]
+  },
   "monospace": {
     "homepage": "https://theme.typora.io/theme/Monospace",
     "name": "Monospace",
@@ -241,6 +280,28 @@
     },
     "variants": [{ "file": "nord.css", "name": "Nord" }]
   },
+  "notes-dark": {
+    "homepage": "https://theme.typora.io/theme/Notes-Dark",
+    "name": "Notes Dark",
+    "source": {
+      "files": ["notes-dark"],
+      "type": "Git",
+      "url": "https://github.com/adesurirey/typora-notes-dark-theme"
+    },
+    "variants": [{ "file": "notes-dark.css", "name": "Notes Dark" }]
+  },
+  "one-dark": {
+    "homepage": "https://theme.typora.io/theme/OneDark",
+    "name": "One Dark",
+    "source": {
+      "files": ["onedark"],
+      "gh_owner": "sweatran",
+      "gh_repo": "typora-onedark-theme",
+      "regex": "typora-(.+)",
+      "type": "GhReleaseZip"
+    },
+    "variants": [{ "file": "onedark.css", "name": "One Dark" }]
+  },
   "onigiri": {
     "homepage": "https://theme.typora.io/theme/Onigiri",
     "name": "Onigiri",
@@ -254,7 +315,7 @@
       { "file": "onigiri-night.css", "name": "Night" }
     ]
   },
-  "orangeheart": {
+  "orange-heart": {
     "homepage": "https://theme.typora.io/theme/OrangeHeart",
     "name": "Orange Heart",
     "source": {
